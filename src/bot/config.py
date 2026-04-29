@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     hf_api_token: str = Field(default="", alias="HF_API_TOKEN")
     hf_model: str = Field(default="HuggingFaceH4/zephyr-7b-beta", alias="HF_MODEL")
     admin_ids: str = Field(default="", alias="ADMIN_IDS")
+    mini_app_url: str = Field(default="https://example.com/miniapp", alias="MINI_APP_URL")
 
 
 settings = Settings()

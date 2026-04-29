@@ -1,30 +1,19 @@
-# Car Assistant Telegram Bot (MVP+)
+# Car Assistant Telegram Bot (MVP++)
 
-Telegram-бот для автовладельцев с бесплатным функционалом и тарифами.
+## Фичи
+- Мульти-гараж: несколько авто, активная машина, переключение
+- Тарифы: FREE (1 авто), PRO 99⭐ (до 3 авто)
+- Лимиты ИИ: FREE 20/мес, PRO 200/мес
+- VIN декодинг (NHTSA)
+- История обслуживания: `/add_service`, `/history`
+- Учет расходов: `/stats`
+- OBD ошибки: `/error P0420` (+ ИИ объяснение)
+- Напоминания: `/reminders`, `/notify_due`
+- Чеклисты: `/checklist trip|winter`
+- Подбор запчастей: `/parts`
+- Админка: `/admin` (пользователи, PRO, монетизация, аналитика)
 
-## Что умеет
-- Добавление авто по VIN: `/add_car <VIN>`
-- Список машин и переключение активной: `/list_cars`, `/switch_car <номер>`
-- Показ активной машины: `/my_car`
-- ИИ-ответы по машине: `/ask <вопрос>`
-- Рекомендации по обслуживанию: `/service`
-- Подсказки по ошибкам OBD-II: `/error P0420`
-- Помощь с подбором запчастей: `/parts <деталь>`
-- Тарифы: `/plans`
-
-## Тарифы (MVP)
-- **FREE (0⭐)**: 1 машина, базовые ответы.
-- **PRO (99⭐)**: 2 машины, более подробные рекомендации.
-
-> Для MVP PRO активируется командой `/upgrade_99`.
-
-## Стек
-- Python 3.11+
-- python-telegram-bot
-- NHTSA VIN Decoder API (бесплатно)
-- Hugging Face Inference API (опционально, с бесплатным лимитом)
-
-## Быстрый старт
+## Запуск
 ```bash
 python -m venv .venv
 source .venv/bin/activate
@@ -32,8 +21,3 @@ pip install -e .
 cp .env.example .env
 PYTHONPATH=src python -m bot.main
 ```
-
-## ENV
-- `TELEGRAM_BOT_TOKEN` — токен Telegram-бота
-- `HF_API_TOKEN` — токен HF (опционально)
-- `HF_MODEL` — модель HF

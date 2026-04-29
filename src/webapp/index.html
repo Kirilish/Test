@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Car Garage Mini App</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body{font-family:Arial;margin:0;padding:12px;background:#f5f7fb} .card{background:#fff;border-radius:12px;padding:12px;margin:8px 0}
+    button{padding:10px;border:none;border-radius:8px;background:#2b6ef3;color:#fff;margin:4px}
+    input{padding:10px;width:100%;margin:4px 0}
+  </style>
+</head>
+<body>
+  <h2>🚗 Мой гараж</h2>
+  <div id="home" class="card"></div>
+  <div class="card">
+    <h3>Добавить авто по VIN</h3>
+    <input id="vin" placeholder="VIN"/><button onclick="addVin()">Добавить</button>
+  </div>
+  <div class="card"><h3>Мои авто</h3><div id="cars"></div></div>
+  <div class="card"><h3>История</h3><div id="history"></div></div>
+  <div class="card"><h3>Напоминания</h3><div id="reminders"></div></div>
+  <div class="card"><h3>Расходы</h3><div id="stats"></div></div>
+
+<script>
+const API = window.API_BASE || 'http://localhost:8000';
+const tg = window.Telegram.WebApp; tg.expand();
+const userId = tg.initDataUnsafe?.user?.id || 1;
+
+async function post(path, body){
+ const r = await fetch(API+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+ if(!r.ok) throw new Error(await r.text()); return r.json();
+}
+
+async function load(){
+ const g = await post('/api/garage',{user_id:userId});
+ document.getElementById('home').innerHTML = `Активное авто: ${g.active? (g.active.Make+' '+g.active.Model):'нет'}<br>Тариф: ${g.profile.plan}`;
+ document.getElementById('cars').innerHTML = (g.profile.cars||[]).map((c,i)=>`<div>${i+1}) ${c.Make} ${c.Model} <button onclick="switchCar(${i})">Активировать</button></div>`).join('');
+ const h = await post('/api/history',{user_id:userId});
+ document.getElementById('history').innerHTML = (h.items||[]).slice(-10).map(x=>`${x.date} ${x.title} ${x.cost}`).join('<br>');
+ const rem = await post('/api/reminders',{user_id:userId});
+ document.getElementById('reminders').innerHTML = rem.items.map(x=>`${x.title}: до ${x.due_mileage} км [${x.status}]`).join('<br>');
+ const s = await post('/api/stats',{user_id:userId});
+ document.getElementById('stats').innerHTML = `Итого: ${s.total}<br>По категориям: ${JSON.stringify(s.by_category)}`;
+}
+async function addVin(){const vin=document.getElementById('vin').value; await post('/api/car/add_by_vin',{user_id:userId,vin}); await load();}
+async function switchCar(i){await post('/api/car/switch/'+i,{user_id:userId}); await load();}
+load();
+</script>
+</body></html>

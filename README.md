@@ -1,15 +1,28 @@
-# Car Assistant Telegram Bot (MVP)
+# Car Assistant Telegram Bot (MVP+)
 
-Telegram-бот для автовладельцев:
-- Добавление автомобиля по VIN (`/add_car`)
-- Хранение данных автомобиля
-- Вопросы к ИИ (`/ask`)
+Telegram-бот для автовладельцев с бесплатным функционалом и тарифами.
+
+## Что умеет
+- Добавление авто по VIN: `/add_car <VIN>`
+- Список машин и переключение активной: `/list_cars`, `/switch_car <номер>`
+- Показ активной машины: `/my_car`
+- ИИ-ответы по машине: `/ask <вопрос>`
+- Рекомендации по обслуживанию: `/service`
+- Подсказки по ошибкам OBD-II: `/error P0420`
+- Помощь с подбором запчастей: `/parts <деталь>`
+- Тарифы: `/plans`
+
+## Тарифы (MVP)
+- **FREE (0⭐)**: 1 машина, базовые ответы.
+- **PRO (99⭐)**: 2 машины, более подробные рекомендации.
+
+> Для MVP PRO активируется командой `/upgrade_99`.
 
 ## Стек
 - Python 3.11+
 - python-telegram-bot
-- NHTSA VIN Decoder API
-- Hugging Face Inference API
+- NHTSA VIN Decoder API (бесплатно)
+- Hugging Face Inference API (опционально, с бесплатным лимитом)
 
 ## Быстрый старт
 ```bash
@@ -17,23 +30,10 @@ python -m venv .venv
 source .venv/bin/activate
 pip install -e .
 cp .env.example .env
-```
-
-Заполните `.env`:
-- `TELEGRAM_BOT_TOKEN` — токен Telegram-бота
-- `HF_API_TOKEN` — (опционально) токен Hugging Face
-
-Запуск:
-```bash
 PYTHONPATH=src python -m bot.main
 ```
 
-## Команды бота
-- `/start`
-- `/add_car <VIN>`
-- `/my_car`
-- `/ask <вопрос>`
-
-## Примечания MVP
-- Основной источник VIN-данных: NHTSA.
-- Если `HF_API_TOKEN` пустой, используется fallback-ответ без внешнего ИИ.
+## ENV
+- `TELEGRAM_BOT_TOKEN` — токен Telegram-бота
+- `HF_API_TOKEN` — токен HF (опционально)
+- `HF_MODEL` — модель HF
